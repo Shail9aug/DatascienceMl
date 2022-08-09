@@ -1,0 +1,68 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Aug  9 06:48:40 2022
+
+@author: singsha
+"""
+
+import pandas as pd
+
+from scipy import stats
+import numpy as np
+
+df= pd.read_csv('C:\\Users\\singsha\\Downloads\\data_2.csv')
+
+ContingencyTable =pd.crosstab(df['City'],df['Brand'],margins=True)
+
+cities=df['City'].unique()
+brands=df['Brand'].unique()
+
+print(ContingencyTable)
+
+
+exp={}
+
+for city in cities :
+    exp1={}
+    for brand in brands :
+        exp1[brand]=ContingencyTable[brand]['All']*ContingencyTable['All'][city]/(ContingencyTable['All']['All'])
+        
+    exp[city]=exp1
+
+csqt=0
+for city in cities :
+    for brand in brands :
+        csqt+=(ContingencyTable[brand][city]-exp[city][brand])**2/(exp[city][brand])
+        
+print(csqt)
+
+##########using inbuilt method
+#lis=[]
+#for city in cities:
+#    cit=[]
+#    for brand in brands :        
+#        cit.append(ContingencyTable.transpose()[city][brand])
+#    lis.append(cit)
+
+lis=[]
+for brand in brands:
+    bran=[]
+    for citi in cities :        
+        bran.append(ContingencyTable[brand][citi])
+    lis.append(bran)
+
+
+print(stats.chi2_contingency(lis))
+    
+
+        
+        
+
+        
+    
+
+    
+
+    
+        
+        
